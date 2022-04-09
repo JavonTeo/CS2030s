@@ -1,0 +1,32 @@
+// @author Javon Teo (Group 14J)
+public class ArrivalEvent extends Event {
+	private Customer cus;
+	private Shop shop;
+
+	public ArrivalEvent(double time, Customer cus, Shop shop) {
+		super(time);
+	       	this.cus = cus;
+		this.shop = shop;
+	}
+
+	@Override
+	public String toString() {
+		String str = "";
+		str = String.format(": %s arrives", this.cus);
+		return super.toString() + str;
+	}
+
+	@Override
+	public Event[] simulate() {
+		Counter counter = this.shop.checkAvail();
+		if (counter == null) {
+			return new Event[] { 
+				new DepartureEvent(this.getTime(), this.cus)
+			};
+		} else {
+			return new Event[] { 
+				new ServiceBeginEvent(this.getTime(), this.cus, counter, this.shop)
+			};
+		}
+	}
+}
